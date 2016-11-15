@@ -156,41 +156,22 @@ contentApp.controller('CartCtrl', ['$scope', '$http', '$templateCache',
         fetchCart();
     }]);
 
-contentApp.controller('HeaderCtrl', ['$scope', '$http',
-    function ($scope, $http) {
-        $scope.authUrl = '/api/user/uaa/v1/me';
-        $scope.meUrl = '/api/user/uaa/v1/me';
+contentApp.controller('HeaderCtrl', ['$rootScope', '$scope', '$http',
+    function ($rootScope, $scope, $http) {
         $scope.user = {};
 
         $scope.logout = function () {
-            $http.post('logout', {}).success(function () {
-                $rootScope.authenticated = false;
+            $http.post('/logout', {}).finally(function () {
                 $scope.user = {};
                 $location.path("/");
-                $location.reload($location.path);
-                $rootScope.$broadcast('logout', "update");
-            }).error(function (data) {
-                $scope.user = {};
-                $rootScope.$broadcast('logout', "update");
             });
         };
 
-
         var fetchUser = function () {
-            $http({
-                method: 'GET',
-                url: $scope.authUrl
-            }).success(function (data, status, headers, config) {
-                $http({
-                    method: 'GET',
-                    url: $scope.meUrl
-                }).success(function (data, status, headers, config) {
-                    $scope.user = data;
-                }).error(function (data, status, headers, config) {
-                });
+            $http.get('/user').success(function (data, status, headers, config) {
                 $scope.user = data;
             }).error(function (data, status, headers, config) {
-                scope.user = {};
+                $scope.user = {};
             });
         };
 

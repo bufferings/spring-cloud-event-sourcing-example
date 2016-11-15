@@ -7,13 +7,16 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @EnableEurekaClient
 @EnableZuulProxy
 @EnableOAuth2Sso
 @EnableHystrix
+@RestController
 public class OnlineStoreApplication extends WebSecurityConfigurerAdapter {
 
     public static void main(String[] args) {
@@ -21,12 +24,18 @@ public class OnlineStoreApplication extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/assets/**");
+    }
+
+    @Override
     public void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/index.html", "/login", "/", "/api/catalog/**",
-                        "/user", "/assets/**").permitAll()
-                .anyRequest().authenticated().and().csrf().disable();
+                .antMatchers("/", "/login**", "/api/catalog/**", "/user").permitAll()
+                .anyRequest().authenticated();
+        http.logout().logoutSuccessUrl("/").permitAll();
+        http.csrf().disable();
     }
 
 }
