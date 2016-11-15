@@ -14,7 +14,7 @@ zuul:
       url: http://localhost:9999
     auth-service:
       path: /user/**
-      url: http://localhost:8181/uaa/user
+      url: http://localhost:8181/uaa/v1/me
 security:
   enable-csrf: false
   oauth2:

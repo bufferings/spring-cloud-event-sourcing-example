@@ -156,10 +156,8 @@ contentApp.controller('CartCtrl', ['$scope', '$http', '$templateCache',
         fetchCart();
     }]);
 
-contentApp.controller('HeaderCtrl', ['$scope', '$http',
-    function ($scope, $http) {
-        $scope.authUrl = '/api/user/uaa/v1/me';
-        $scope.meUrl = '/api/user/uaa/v1/me';
+contentApp.controller('HeaderCtrl', ['$rootScope', '$scope', '$http', '$location',
+    function ($rootScope, $scope, $http, $location) {
         $scope.user = {};
 
         $scope.logout = function () {
@@ -167,7 +165,6 @@ contentApp.controller('HeaderCtrl', ['$scope', '$http',
                 $rootScope.authenticated = false;
                 $scope.user = {};
                 $location.path("/");
-                $location.reload($location.path);
                 $rootScope.$broadcast('logout', "update");
             }).error(function (data) {
                 $scope.user = {};
@@ -179,18 +176,11 @@ contentApp.controller('HeaderCtrl', ['$scope', '$http',
         var fetchUser = function () {
             $http({
                 method: 'GET',
-                url: $scope.authUrl
+                url: '/user'
             }).success(function (data, status, headers, config) {
-                $http({
-                    method: 'GET',
-                    url: $scope.meUrl
-                }).success(function (data, status, headers, config) {
-                    $scope.user = data;
-                }).error(function (data, status, headers, config) {
-                });
                 $scope.user = data;
             }).error(function (data, status, headers, config) {
-                scope.user = {};
+                $scope.user = {};
             });
         };
 
