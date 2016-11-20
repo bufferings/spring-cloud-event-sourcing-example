@@ -12,18 +12,18 @@ zuul:
     edge-service:
       path: /api/**
       url: http://localhost:9999
-    auth-service:
+    user-service:
       path: /user/**
-      url: http://localhost:8181/uaa/v1/me
+      url: http://localhost:8181/me
 security:
   oauth2:
     client:
-      accessTokenUri: http://localhost:8181/uaa/oauth/token
-      userAuthorizationUri: http://localhost:8181/uaa/oauth/authorize
+      accessTokenUri: http://localhost:8080/uaa/oauth/token
+      userAuthorizationUri: http://localhost:8080/uaa/oauth/authorize
       clientId: acme
       clientSecret: acmesecret
     resource:
-      userInfoUri: http://localhost:8181/uaa/v1/me
+      userInfoUri: http://localhost:8181/me
 eureka:
   instance:
     non-secure-port: 8787

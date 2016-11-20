@@ -4,14 +4,10 @@ spring:
 ---
 server:
   port: 8181
-  contextPath: /uaa
 security:
   oauth2:
-    client:
-      client-id: acme
-      client-secret: acmesecret
-      scope: read,write
-      auto-approve-scopes: '.*'
+    resource:
+      userInfoUri: http://localhost:8080/uaa/userinfo
 spring:
   profiles: development
   datasource:
@@ -21,4 +17,3 @@ spring:
     initialize: true
   thymeleaf:
     cache: false
-logging.level.org.springframework.security: DEBUG
